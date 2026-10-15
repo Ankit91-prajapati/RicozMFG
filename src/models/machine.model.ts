@@ -16,8 +16,6 @@ const machineSchema = new mongoose.Schema(
       uppercase: true,
     },
 
-    type: String,
-
     status: {
       type: String,
       enum: [

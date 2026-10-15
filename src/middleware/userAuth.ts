@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import UserModel from "../models/user.model.js";
+import User from "../models/user.model.js";
 
 export default async function userAuth(
   req: Request,
@@ -22,7 +22,7 @@ export default async function userAuth(
       tokenVersion: number;
     };
 
-    const user = await UserModel.findById(payload.id);
+    const user = await User.findById(payload.id);
     if (!user) {
       return res
         .status(401)

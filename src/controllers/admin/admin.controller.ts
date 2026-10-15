@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import UserModel from "../../models/user.model.js";
+import User from "../../models/user.model.js";
 
 
  export default async function showUsersData(req:Request , res:Response) {
    try {
-    const users = await UserModel.find()
+    const users = await User.find()
      const safeUsers = users.map((user) => ({
       id: user._id,
       username: user.username,

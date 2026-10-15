@@ -38,6 +38,8 @@ const workOrderSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+        
+    stockPostedQuantity: { type: Number, default: 0, min: 0 },
 
     startDate: Date,
     dueDate: Date,

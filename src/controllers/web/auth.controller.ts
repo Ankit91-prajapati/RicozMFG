@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { userLoginSchema, userRegisterSchema } from "./auth.schema.js";
-import UserModel from "../../models/user.model.js";
+import User from "../../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import sendVerifyEmail from "../../lib/email.js";
@@ -25,7 +25,7 @@ export async function register(req: Request, res: Response) {
 
     const { username, email, password } = user.data;
     const normalisedEmail = email.toLowerCase().trim();
-    const existingUser = await UserModel.findOne({ email: normalisedEmail });
+    const existingUser = await User.findOne({ email: normalisedEmail });
 
     if (existingUser) {
       return res
@@ -33,7 +33,7 @@ export async function register(req: Request, res: Response) {
         .json({ success: false, message: "User alreay exists!" });
     }
     const HashPassword = await bcrypt.hash(password, 10);
-    const newlyCreatedUser = await UserModel.create({
+    const newlyCreatedUser = await User.create({
       username,
       email: normalisedEmail,
       password: HashPassword,
@@ -79,7 +79,7 @@ export async function verifyEmail(req: Request, res: Response) {
       id: string;
     };
 
-    const user = await UserModel.findById(payload.id);
+    const user = await User.findById(payload.id);
 
     if (!user) {
       return res
@@ -120,7 +120,7 @@ export async function login(req: Request, res: Response) {
     const { email, password } = user.data;
     const normalisedEmail = email.toLowerCase().trim();
 
-    const userExist = await UserModel.findOne({ email: normalisedEmail });
+    const userExist = await User.findOne({ email: normalisedEmail });
     if (!userExist) {
       return res.status(404).json({
         success: false,
@@ -204,7 +204,7 @@ export async function refreshHandler(req: Request, res: Response) {
       tokenVersion: number;
     };
 
-    const user = await UserModel.findById(payload.id);
+    const user = await User.findById(payload.id);
 
     if (!user) {
       return res
@@ -287,7 +287,7 @@ export async function forgotPassword(req: Request, res: Response) {
         .json({ success: false, message: "Email are required" });
     }
 
-    const user = await UserModel.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(404)
@@ -337,7 +337,7 @@ export async function resetPassword(req: Request, res: Response) {
     }
 
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       resetPasswordToken: tokenHash,
       resetPasswordExpiryDate: { $gt: new Date() }, // expiry must be in future
     });
@@ -423,14 +423,14 @@ export async function googleAuthCallback(req: Request, res: Response) {
     const normalizedEmail = email.toLowerCase().trim();
 
     // 🔍 Check user in DB
-    let user = await UserModel.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       // 🆕 Create new user
       const randomPassword = crypto.randomBytes(16).toString("hex");
       const passwordHash = await bcrypt.hash(randomPassword, 10);
 
-      user = await UserModel.create({
+      user = await User.create({
         username: payload?.name ?? normalizedEmail.split("@")[0],
         email: normalizedEmail,
         password: passwordHash,

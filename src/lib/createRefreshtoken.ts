@@ -4,7 +4,7 @@ const createRefreshtoken = (id:string , tokenVersion:number) => {
     const payload = {id  ,tokenVersion}
 
   return (
-       jwt.sign(payload ,process.env.JWT_SECRET! , {expiresIn:"7d"})
+       jwt.sign(payload ,process.env.REFRESH_SECRET! , {expiresIn:"7d"})
      )
 }
 
