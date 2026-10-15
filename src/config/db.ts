@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
  export default async function connectDB() {
     try {
-        await mongoose.connect(`${process.env.MONGODB_URI}/auth-backend`)
+        await mongoose.connect(`${process.env.MONGODB_URI}/`)
         console.log("DB connect successfully")
     } catch (error) {
         console.error(error)
