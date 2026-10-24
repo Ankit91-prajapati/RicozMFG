@@ -215,7 +215,10 @@ export async function refreshHandler(req: Request, res: Response) {
       tokenVersion: number;
     };
     try {
-      payload = jwt.verify(token, process.env.JWT_SECRET!) as typeof payload;
+      payload = jwt.verify(
+  token,
+  process.env.REFRESH_SECRET!
+) as typeof payload;
     } catch {
       return res
         .status(401)
