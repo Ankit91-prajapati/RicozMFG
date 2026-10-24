@@ -414,6 +414,7 @@ export async function googleAuthCallback(req: Request, res: Response) {
         message: "Missing code in callback",
       });
     }
+    
 
     const client = getGoogleClient();
 
